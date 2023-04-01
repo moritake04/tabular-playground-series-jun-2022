@@ -1,0 +1,100 @@
+general:
+  seed: &seed 42
+  fold: [0, 1, 2, 3, 4] # list (0-idx start) or null. set one element list, hold-out mode.
+  n_splits: 5
+
+model: nn # nn or lgbm or tabnet
+
+# ↓ for lgbm
+lgbm_params:
+  objective: regression
+  metric: rmse
+  feature_pre_filter: false
+  lambda_l1: 9.385718073940518
+  lambda_l2: 5.194389374510644e-06
+  num_leaves: 256
+  feature_fraction: 1.0
+  bagging_fraction: 0.8907751078299737
+  bagging_freq: 2
+  min_child_samples: 100
+  early_stopping_round: 0 # off -> 0
+  verbose: -1
+lgbm_train_params:
+  num_boost_round: 5
+  verbose_eval: False
+
+# ↓ for tabnet
+tabnet_params:
+  device_name: "auto"
+  seed: *seed
+  n_d: 8
+  n_a: 8
+  n_steps: 3
+  gamma: 1.3
+  mask_type: "sparsemax"
+  verbose: 1
+tabnet_train_params:
+  eval_metric: [rmse]
+  max_epochs: &max_epochs 200
+  patience: 10
+  batch_size: 1024
+  virtual_batch_size: 128
+  num_workers: 2
+  drop_last: true
+
+optimizer:
+  name: Adam
+  params:
+    lr: 1.0e-3
+scheduler:
+  name: CosineAnnealingLR
+  params:
+    T_max: *max_epochs
+    eta_min: 1.0e-5
+
+# ↓ for neural network
+pl_params:
+  max_epochs: &max_epochs 200
+  accelerator: auto
+  accumulate_grad_batches: 1
+  precision: 32 # 16 or 32
+  deterministic: true
+  benchmark: false
+  logger: false
+  enable_checkpointing: false
+  enable_model_summary: false
+  #limit_train_batches: 0.01 # for debug
+  #limit_val_batches: 0.05 # for debug
+
+early_stopping:
+  patience: 10
+
+criterion: RMSELoss
+optimizer:
+  name: Adam
+  params:
+    lr: 1.0e-3
+scheduler:
+  name: CosineAnnealingLR
+  params:
+    T_max: *max_epochs
+    eta_min: 1.0e-5
+
+train_loader:
+  batch_size: 1024
+  shuffle: true
+  num_workers: 2
+  pin_memory: true
+  drop_last: true
+valid_loader:
+  batch_size: 1024
+  shuffle: false
+  num_workers: 2
+  pin_memory: true
+  drop_last: false
+test_loader:
+  batch_size: 1024
+  shuffle: false
+  num_workers: 2
+  pin_memory: true
+  drop_last: false

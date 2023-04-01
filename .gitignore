@@ -1,0 +1,9 @@
+/data/input/
+/data/output/
+/notebooks/colab.ipynb
+/src/shell.bat
+/src/wandb/
+/src/lightning_logs/
+*.ipynb_checkpoints/
+*__pycache__/
+*.DS_Store

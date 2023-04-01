@@ -1,0 +1,4 @@
+from regressor.lgbm_regressor import LGBMRegressor
+from regressor.nn_regressor import NNRegressor
+from regressor.onedcnn_regressor import OneDCNNRegressor
+from regressor.tabnet_regressor import TNRegressor
